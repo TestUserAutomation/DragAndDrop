@@ -1,0 +1,243 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<style>
+#div1 {
+  width: 350px;
+  height: 70px;
+  padding: 10px;
+  background-color: rgb(255, 153, 0);
+ 
+}
+
+
+
+    header h1 {
+        font-size: 10pt;
+    }
+
+</style>
+<script>
+function allowDrop(ev) {
+  ev.preventDefault();
+}
+
+function drag(ev) {
+  ev.dataTransfer.setData("text", ev.target.id);
+}
+
+function drop(ev) {
+  ev.preventDefault();
+  var data = ev.dataTransfer.getData("text");
+  ev.target.appendChild(document.getElementById(data));
+}
+</script>
+</head>
+<body>
+
+ <header>
+        <h1>Scenario 1</h1>
+    </header>
+</br>
+</br>
+
+<div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+<br>
+<img id="drag1" src="img_logo.png" draggable="true" ondragstart="drag(event)" width="336" height="69">
+</br>
+</br>
+</br>
+</br>
+</br>
+<style type="text/css">
+body {
+    font-family: "Verdana";
+    font-size: 9pt;
+}
+
+header {
+    padding: 5px;
+    width:200px;
+    background-color: rgb(27, 161, 226);
+    color: #fff;
+}
+
+article {
+    width: 90%;
+    margin: auto;
+    margin-top: 20px;
+}
+
+ul {
+    list-style-type: none;
+    float: left;
+}
+
+li label {
+    float: left;
+    width: 7.5em;
+    height: 1.7em;
+    font-size: 90%;
+    line-height: 20px;
+}
+
+/*DnD styles*/
+
+ul input:hover {
+    border: 2px solid #C6C6C6;
+    background-color: #10a0de;
+  color: white;
+}
+
+section ul li input:first-child {
+}
+
+section ul li input:last-child {
+    margin: 5px;
+}
+
+
+.clear {
+    clear: both;
+}
+
+
+/*DnD styles*/
+
+/* Prevent the text contents of draggable elements from being selectable. */
+[draggable] {
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+ul li[draggable=true] {
+    cursor: move;
+}
+
+    ul li[draggable=true]:hover {
+        /*border: dashed 1px rgb(27, 161, 226);*/
+    }
+
+.moving {
+    opacity: 0.25;
+   /* border: dashed 1px red;*/
+    -webkit-transform: scale(0.8);
+    -moz-transform: scale(0.8);
+    -ms-transform: scale(0.8);
+    -o-transform: scale(0.8);
+}
+
+.over {
+   /* border: 2px dashed #000;*/
+}
+
+</style>
+
+
+<body>
+    <header>
+        <h1>Drag and drop HTML elements</h1>
+    </header>
+    <article>
+        <ul>
+            <li draggable="true">
+                <label for="txtA">Label A</label><input type="text" placeholder="Texbox A" style="height: 20px; width: 200px" /></li>
+            <li draggable="true">
+                <label for="txtB">Label B</label><input type="text" placeholder="Texbox B" style="height: 20px; width: 200px"/></li>
+            <li draggable="true">
+                <label for="txtC">Label C</label><input type="text" placeholder="Texbox C" style="height: 20px; width: 200px"/></li>
+            <li draggable="true">
+                <label for="txtD">Label D</label><input type="text" placeholder="Texbox D" style="height: 20px; width: 200px"/></li>
+        </ul>
+        <ul>
+            <li draggable="true">
+                <label for="txtG">Label G</label><input type="text" placeholder="Texbox G" style="height: 20px; width: 200px"/></li>
+            <li draggable="true">
+                <label for="txtH">Label H</label><input type="text" placeholder="Texbox H" style="height: 20px; width: 200px"/></li>
+            <li draggable="true">
+                <label for="txtI">Label I</label><input type="text" placeholder="Texbox I" style="height: 20px; width: 200px"/></li>
+            <li draggable="true">
+                <label for="txtJ">Label J</label><input type="text" placeholder="Texbox J" style="height: 20px; width: 200px"/></li>
+        </ul>
+    </article>    
+
+   <script type="text/javascript">
+    var HTML5 = HTML5 || {};
+
+HTML5.DnD = function() {
+    //private members
+    var dragSrcEl = null,
+        draggables = null,
+
+        init = function(selector) {
+
+            draggables = document.querySelectorAll(selector);
+
+            //Set listeners
+            [].forEach.call(draggables, function(elem) {
+                elem.addEventListener("dragstart", dragStart, false);
+                elem.addEventListener("drag", drag, false);
+                elem.addEventListener("dragenter", dragEnter, false);
+                elem.addEventListener("dragover", dragOver, false);
+                elem.addEventListener("dragleave", dragLeave, false);
+                elem.addEventListener("drop", drop, false);
+                elem.addEventListener("dragend", dragEnd, false);
+            });
+
+        },
+        dragStart = function(e) {
+            e.dataTransfer.effectAllowed = 'move';
+            //e.dataTransfer.setData('text/html', this.innerHTML);
+            e.dataTransfer.setData('text', this.innerHTML);
+            dragSrcEl = this;
+            this.className = this.className.replace("target", "");
+
+        },
+        drag = function(e) {
+            this.className += ' moving';
+        },
+        dragOver = function(e) {
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
+
+            e.dataTransfer.dropEffect = 'move';
+            this.className += " over";
+
+
+        },
+        dragEnter = function() {
+            this.className += " over";
+        },
+        dragLeave = function() {
+            this.className = "";
+        },
+        drop = function(e) {
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            }
+
+            if (dragSrcEl != this) {
+                dragSrcEl.innerHTML = this.innerHTML;
+                //this.innerHTML = e.dataTransfer.getData('text/html');
+                this.innerHTML = e.dataTransfer.getData('text');
+            }
+
+            return false;
+        },
+        dragEnd = function() {[].forEach.call(draggables, function(elem) {
+                elem.className = "";
+            });
+        };
+
+    return {
+        init: init
+    }
+}();
+HTML5.DnD.init('ul li[draggable=true]');
+</script>
+
+</body>
+</html>
